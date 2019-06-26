@@ -146,7 +146,8 @@ def main(args):
     else:
         unet = builder.build_unet(num_class=args.num_class,
             arch=args.arch_unet,
-            weights=args.weights_unet)
+            weights=args.weights_unet,
+            use_softmax=True)
 
     crit = nn.NLLLoss()
     

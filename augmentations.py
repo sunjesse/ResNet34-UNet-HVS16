@@ -117,7 +117,6 @@ class AdjustSaturation(object):
                                     random.uniform(1 - self.saturation,
                                                    1 + self.saturation)), mask
 
-
 class AdjustHue(object):
     def __init__(self, hue):
         self.hue = hue

@@ -153,11 +153,11 @@ class ModelBuilder():
         #elif classname.find('Linear') != -1:
         #    m.weight.data.normal_(0.0, 0.0001)
     
-    def build_unet(self, num_class=1, arch='albunet', weights=''):
+    def build_unet(self, num_class=1, arch='albunet', weights='', use_softmax=False):
         arch = arch.lower()
 
         if arch == 'albunet':
-            unet = AlbuNet(num_classes=num_class)
+            unet = AlbuNet(num_classes=num_class, use_softmax=use_softmax)
         else:
             raise Exception('Architecture undefined!')
         
@@ -722,7 +722,7 @@ class DecoderBlock(nn.Module):
       
 #ResNet + UNet
 class AlbuNet(nn.Module):
-    def __init__(self, num_classes=2, num_filters=16, pretrained=True, is_deconv=False):
+    def __init__(self, num_classes=2, num_filters=16, pretrained=True, is_deconv=False, use_softmax=False):
         super(AlbuNet, self).__init__()
         
         self.num_classes = num_classes
@@ -798,6 +798,9 @@ class AlbuNet(nn.Module):
         else:
             x_out = self.final(dec0)
         '''
+        
+        if use_softmax == True:
+            return nn.functional.softmax(self.final(dec0), dim=1)
 
         x_out = nn.functional.log_softmax(self.final(dec0), dim=1) #DIM = 1, perform channel-wise log softmax.
         #x_out = self.final(dec0)
